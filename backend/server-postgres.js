@@ -17,7 +17,6 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3001;
-const HOST = process.env.SERVER_HOST || '0.0.0.0';
 
 // Middleware
 app.use(cors({
@@ -644,28 +643,30 @@ app.get('/api/health', (req, res) => {
 });
 
 // Start server
-app.listen(PORT, HOST, async () => {
-  console.log(`🚀 Server is running on http://${HOST}:${PORT}`);
-  console.log(`📡 API endpoints available at http://${HOST}:${PORT}/api`);
-  console.log(`🔐 Admin endpoints available at http://${HOST}:${PORT}/api/admin`);
+app.listen(PORT, async () => {
+  console.log(`🚀 Server is running on port ${PORT}`);
+  console.log(`📡 API endpoints available at /api`);
+  console.log(`🔐 Admin endpoints available at /api/admin`);
   
-  // Get local IP address
-  const os = await import('os');
-  const networkInterfaces = os.networkInterfaces();
-  const addresses = [];
-  
-  for (const nets of Object.values(networkInterfaces)) {
-    for (const net of nets) {
-      if (net.family === 'IPv4' && !net.internal) {
-        addresses.push(net.address);
+  // Get local IP address (only for local development)
+  if (process.env.NODE_ENV !== 'production') {
+    const os = await import('os');
+    const networkInterfaces = os.networkInterfaces();
+    const addresses = [];
+    
+    for (const nets of Object.values(networkInterfaces)) {
+      for (const net of nets) {
+        if (net.family === 'IPv4' && !net.internal) {
+          addresses.push(net.address);
+        }
       }
     }
-  }
-  
-  if (addresses.length > 0) {
-    console.log(`\n📱 Access from other devices:`);
-    addresses.forEach(address => {
-      console.log(`   http://${address}:${PORT}`);
-    });
+    
+    if (addresses.length > 0) {
+      console.log(`\n📱 Access from other devices:`);
+      addresses.forEach(address => {
+        console.log(`   http://${address}:${PORT}`);
+      });
+    }
   }
 });
