@@ -1,7 +1,11 @@
-  {
+{
   "name": "restaurant-menu-backend",
   "version": "1.0.0",
   "type": "module",
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
   "scripts": {
     "start": "node server-postgres.js",
     "dev": "node --watch server-postgres.js",
@@ -13,6 +17,7 @@
     "add-bar-pizza": "node migrations/add-bar-pizza-categories.js",
     "add-bar-pizza-dishes": "node migrations/add-bar-pizza-dishes.js",
     "remove-sushi-rolls": "node migrations/remove-sushi-rolls.js",
+    "railway-init": "node railway-init.js",
     "start-old": "node server.js",
     "dev-old": "node --watch server.js"
   },
