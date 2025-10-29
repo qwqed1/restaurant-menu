@@ -6,24 +6,28 @@ dotenv.config();
 // Create tables
 const createTables = async () => {
   try {
-    // Create categories table
+    // Create categories table with localization
     await pool.query(`
       CREATE TABLE IF NOT EXISTS categories (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL UNIQUE,
+        name_ru VARCHAR(255) NOT NULL,
+        name_en VARCHAR(255),
+        name_kk VARCHAR(255),
         display_order INTEGER DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
     `);
 
-    // Create dishes table
+    // Create dishes table with localization
     await pool.query(`
       CREATE TABLE IF NOT EXISTS dishes (
         id SERIAL PRIMARY KEY,
         category_id INTEGER NOT NULL,
         name VARCHAR(255) NOT NULL,
-        description TEXT,
+        description_ru TEXT,
+        description_en TEXT,
+        description_kk TEXT,
         price DECIMAL(10, 2) NOT NULL,
         image_url TEXT,
         weight VARCHAR(50),
@@ -55,28 +59,31 @@ const createTables = async () => {
   }
 };
 
-// Insert sample categories
+// Insert sample categories with localization
 const insertCategories = async () => {
   const categories = [
-    { name: 'Завтраки', order: 1 },
-    { name: 'Сэндвичи', order: 2 },
-    { name: 'Закуски', order: 3 },
-    { name: 'Салаты', order: 4 },
-    { name: 'Супы', order: 5 },
-    { name: 'Основные блюда', order: 6 },
-    { name: 'Паназия', order: 7 },
-    { name: 'Паста', order: 8 },
-    { name: 'Гарниры', order: 9 },
-    { name: 'Десерты', order: 10 },
-    { name: 'Хлеб', order: 11 },
-    { name: 'Добавки ко всему', order: 12 }
+    { name_ru: 'Завтраки', name_en: 'Breakfast', name_kk: 'Таңғы ас', order: 1 },
+    { name_ru: 'Сэндвичи', name_en: 'Sandwiches', name_kk: 'Сэндвичтер', order: 2 },
+    { name_ru: 'Закуски', name_en: 'Appetizers', name_kk: 'Тағамдар', order: 3 },
+    { name_ru: 'Салаты', name_en: 'Salads', name_kk: 'Салаттар', order: 4 },
+    { name_ru: 'Супы', name_en: 'Soups', name_kk: 'Сорпалар', order: 5 },
+    { name_ru: 'Основные блюда', name_en: 'Main Dishes', name_kk: 'Негізгі тағамдар', order: 6 },
+    { name_ru: 'Паназия', name_en: 'Pan-Asian', name_kk: 'Паназиялық', order: 7 },
+    { name_ru: 'Паста', name_en: 'Pasta', name_kk: 'Паста', order: 8 },
+    { name_ru: 'Гарниры', name_en: 'Side Dishes', name_kk: 'Гарнирлер', order: 9 },
+    { name_ru: 'Десерты', name_en: 'Desserts', name_kk: 'Десерттер', order: 10 },
+    { name_ru: 'Хлеб', name_en: 'Bread', name_kk: 'Нан', order: 11 },
+    { name_ru: 'Добавки ко всему', name_en: 'Add-ons', name_kk: 'Қосымшалар', order: 12 }
   ];
 
   try {
+    // Clear existing categories first
+    await pool.query('TRUNCATE TABLE categories RESTART IDENTITY CASCADE');
+    
     for (const category of categories) {
       await pool.query(
-        'INSERT INTO categories (name, display_order) VALUES ($1, $2) ON CONFLICT (name) DO NOTHING',
-        [category.name, category.order]
+        'INSERT INTO categories (name_ru, name_en, name_kk, display_order) VALUES ($1, $2, $3, $4)',
+        [category.name_ru, category.name_en, category.name_kk, category.order]
       );
     }
     console.log(`✅ Inserted ${categories.length} categories`);
@@ -265,12 +272,12 @@ const insertDishes = async () => {
 
     for (const dish of dishes) {
       await pool.query(
-        `INSERT INTO dishes (category_id, name, description, price, image_url, weight) 
-         VALUES ($1, $2, $3, $4, $5, $6)`,
-        [dish.category_id, dish.name, dish.description, dish.price, dish.image_url, dish.weight]
+        `INSERT INTO dishes (category_id, name, description_ru, description_en, description_kk, price, image_url, weight) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`,
+        [dish.category_id, dish.name, dish.description, dish.description, dish.description, dish.price, dish.image_url, dish.weight]
       );
     }
-    console.log(`✅ Inserted ${dishes.length} dishes`);
+    console.log(`✅ Inserted ${dishes.length} dishes (with Russian descriptions, EN/KK will use same text as fallback)`);
   } catch (error) {
     console.error('Error inserting dishes:', error);
     throw error;
