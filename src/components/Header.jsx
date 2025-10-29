@@ -6,7 +6,7 @@ const Header = ({ title, onBack, onHome, showBack }) => {
     <header className="glass-effect border-b border-menu-gold/30 px-6 py-5 flex items-center justify-between shadow-lg">
       <button 
         onClick={onBack}
-        className={`p-2.5 rounded-full bg-gradient-to-br from-menu-gold to-menu-gold/80 hover:from-menu-gold hover:to-menu-gold/90 transition-all duration-300 shadow-md hover:shadow-gold hover:scale-105 ${
+        className={`p-2.5 rounded-full bg-gradient-to-br from-menu-gold to-menu-gold/80 shadow-md ${
           showBack ? 'visible' : 'invisible'
         }`}
       >
@@ -17,7 +17,7 @@ const Header = ({ title, onBack, onHome, showBack }) => {
 
       <button 
         onClick={onHome}
-        className="p-2.5 rounded-full bg-gradient-to-br from-menu-gold to-menu-gold/80 hover:from-menu-gold hover:to-menu-gold/90 transition-all duration-300 shadow-md hover:shadow-gold hover:scale-105"
+        className="p-2.5 rounded-full bg-gradient-to-br from-menu-gold to-menu-gold/80 shadow-md"
       >
         <Home className="w-5 h-5 text-menu-green" />
       </button>

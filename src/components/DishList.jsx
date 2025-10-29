@@ -5,8 +5,13 @@ const DishList = ({ dishes, onViewDish }) => {
   return (
     <div className="px-6 py-4">
       <div className="space-y-0">
-        {dishes.map((dish) => (
-          <DishCard key={dish.id} dish={dish} onViewDetails={onViewDish} />
+        {dishes.map((dish, index) => (
+          <DishCard 
+            key={dish.id} 
+            dish={dish} 
+            onViewDetails={onViewDish}
+            index={index}
+          />
         ))}
       </div>
     </div>

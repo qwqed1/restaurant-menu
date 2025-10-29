@@ -182,7 +182,7 @@ function App() {
         <div className="flex-1 flex overflow-hidden">
           {selectedCategory ? (
             <>
-              <div className="flex-1 overflow-y-auto">
+              <div className="flex-1 overflow-y-auto animate-fadeIn">
                 <DishList dishes={filteredDishes} onViewDish={handleViewDish} />
               </div>
               <Sidebar 
@@ -194,17 +194,17 @@ function App() {
           ) : (
             <div className="flex-1 flex">
               {/* Left side content - positioned left but not at edge */}
-              <div className="flex-1 flex items-center pl-20">
+              <div className="flex-1 flex items-center justify-center">
                 <div className="relative">
                   {/* Large circular decorative elements matching the design */}
-                  <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full border-2 border-menu-gold/50 border-dashed animate-pulse" />
-                  <div className="absolute -bottom-16 -right-16 w-48 h-48 rounded-full border-2 border-menu-gold/40 border-dashed animate-pulse" style={{animationDelay: '1s'}} />
+                  <div className="absolute -top-16 -left-16 w-40 h-40 rounded-full border-2 border-menu-gold/50 border-dashed animate-pulse" />
+                  <div className="absolute -bottom-16 -right-16 w-40 h-40 rounded-full border-2 border-menu-gold/40 border-dashed animate-pulse" style={{animationDelay: '1s'}} />
                   
                   <div className="relative z-10 text-center">
                     {/* Animated Dish image and category */}
-                    <div className="overflow-hidden mb-8">
+                    <div className="mb-4">
                       <div 
-                        className={`transition-all duration-1000 ${
+                        className={`transition-all duration-1000 overflow-hidden p-8 ${
                           isAnimating ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'
                         }`}
                       >
@@ -212,10 +212,10 @@ function App() {
                           key={currentCarouselIndex}
                           src={currentImage}
                           alt={currentCarouselCategory?.name || 'Featured dish'}
-                          className="w-52 h-52 md:w-60 md:h-60 rounded-full object-cover mx-auto mb-8 ring-4 ring-menu-gold/60 hover:ring-menu-gold transition-all duration-500 hover:scale-105"
+                          className="w-64 h-64 rounded-full object-cover mx-auto mb-6 ring-4 ring-menu-gold/60"
                         />
                         
-                        <h2 className="text-2xl md:text-3xl font-light text-menu-cream drop-shadow-lg">
+                        <h2 className="text-3xl font-light text-menu-cream drop-shadow-lg">
                           {currentCarouselCategory?.name || 'Меню'}
                         </h2>
                       </div>
@@ -224,7 +224,7 @@ function App() {
                     {/* Fixed button - stays in place */}
                     <button 
                       onClick={() => currentCarouselCategory && setSelectedCategory(currentCarouselCategory.id)}
-                      className="px-8 py-3 bg-gradient-to-r from-menu-gold to-menu-gold/90 text-menu-green text-sm font-semibold rounded-full hover:from-menu-gold hover:to-menu-gold transition-all duration-300 flex items-center gap-2 mx-auto shadow-xl hover:shadow-2xl hover:shadow-menu-gold/50 hover:scale-110"
+                      className="px-10 py-4 bg-gradient-to-r from-menu-gold to-menu-gold/90 text-menu-green text-base font-semibold rounded-full flex items-center gap-2 mx-auto shadow-xl"
                     >
                       <span className="text-menu-green">📋</span>
                       Перейти в меню
