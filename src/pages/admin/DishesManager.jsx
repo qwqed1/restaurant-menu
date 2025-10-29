@@ -30,7 +30,9 @@ function DishesManager({ onUpdate }) {
   const [formData, setFormData] = useState({
     name: '',
     category_id: '',
-    description: '',
+    description_ru: '',
+    description_en: '',
+    description_kk: '',
     price: '',
     image_url: '',
     weight: '',
@@ -151,7 +153,9 @@ function DishesManager({ onUpdate }) {
       setFormData({
         name: dish.name,
         category_id: dish.category_id,
-        description: dish.description || '',
+        description_ru: dish.description_ru || dish.description || '',
+        description_en: dish.description_en || '',
+        description_kk: dish.description_kk || '',
         price: dish.price,
         image_url: dish.image_url || '',
         weight: dish.weight || '',
@@ -164,7 +168,9 @@ function DishesManager({ onUpdate }) {
       setFormData({
         name: '',
         category_id: '',
-        description: '',
+        description_ru: '',
+        description_en: '',
+        description_kk: '',
         price: '',
         image_url: '',
         weight: '',
@@ -185,7 +191,9 @@ function DishesManager({ onUpdate }) {
     setFormData({
       name: '',
       category_id: '',
-      description: '',
+      description_ru: '',
+      description_en: '',
+      description_kk: '',
       price: '',
       image_url: '',
       weight: '',
@@ -282,7 +290,7 @@ function DishesManager({ onUpdate }) {
           >
             <option value="">Все категории</option>
             {categories.map(cat => (
-              <option key={cat.id} value={cat.id}>{cat.name}</option>
+              <option key={cat.id} value={cat.id}>{cat.name_ru || cat.name}</option>
             ))}
           </select>
         </div>
@@ -335,7 +343,7 @@ function DishesManager({ onUpdate }) {
                   </td>
                   <td className="px-6 py-4">
                     <div className="text-sm font-medium text-gray-900">{dish.name}</div>
-                    <div className="text-sm text-gray-500 truncate max-w-xs">{dish.description}</div>
+                    <div className="text-sm text-gray-500 truncate max-w-xs">{dish.description_ru || dish.description}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className="px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
@@ -439,7 +447,7 @@ function DishesManager({ onUpdate }) {
                   >
                     <option value="">Выберите категорию</option>
                     {categories.map(cat => (
-                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                      <option key={cat.id} value={cat.id}>{cat.name_ru || cat.name}</option>
                     ))}
                   </select>
                   {formErrors.category_id && (
@@ -482,18 +490,53 @@ function DishesManager({ onUpdate }) {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Описание
-                </label>
-                <div className="relative">
-                  <FileText className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({...formData, description: e.target.value})}
-                    className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green"
-                    rows="3"
-                  />
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Описание на русском
+                  </label>
+                  <div className="relative">
+                    <FileText className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                    <textarea
+                      value={formData.description_ru}
+                      onChange={(e) => setFormData({...formData, description_ru: e.target.value})}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green"
+                      rows="3"
+                      placeholder="Введите описание блюда на русском языке"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Описание на английском
+                  </label>
+                  <div className="relative">
+                    <FileText className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                    <textarea
+                      value={formData.description_en}
+                      onChange={(e) => setFormData({...formData, description_en: e.target.value})}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green"
+                      rows="3"
+                      placeholder="Enter dish description in English"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Описание на казахском
+                  </label>
+                  <div className="relative">
+                    <FileText className="absolute left-3 top-3 w-4 h-4 text-gray-400" />
+                    <textarea
+                      value={formData.description_kk}
+                      onChange={(e) => setFormData({...formData, description_kk: e.target.value})}
+                      className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green"
+                      rows="3"
+                      placeholder="Тағам сипаттамасын қазақ тілінде енгізіңіз"
+                    />
+                  </div>
                 </div>
               </div>
 

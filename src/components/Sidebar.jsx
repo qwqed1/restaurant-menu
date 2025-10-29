@@ -1,8 +1,19 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Sidebar = ({ categories, selectedCategory, onSelectCategory }) => {
+  const { i18n } = useTranslation();
+  
+  // Get category name based on current language
+  const getCategoryName = (category) => {
+    const lang = i18n.language;
+    if (lang === 'en' && category.name_en) return category.name_en;
+    if (lang === 'kk' && category.name_kk) return category.name_kk;
+    return category.name_ru || category.name; // Fallback to Russian or original name
+  };
+
   return (
-    <aside className="w-64 glass-effect border-l border-menu-gold/30 p-6 overflow-y-auto shadow-xl animate-slideInRight">
+    <aside className="w-64 bg-transparent border-l border-menu-gold/20 p-6 overflow-y-auto animate-slideInRight">
       <div className="border-t-2 border-menu-gold/50 pt-6 mb-6"></div>
       <div className="space-y-3">
         {categories.map((category) => (
@@ -18,7 +29,7 @@ const Sidebar = ({ categories, selectedCategory, onSelectCategory }) => {
             <span className={`w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ${
               selectedCategory === category.id ? 'bg-menu-gold shadow-lg shadow-menu-gold/50' : 'bg-menu-cream/40'
             }`} />
-            <span>{category.name}</span>
+            <span>{getCategoryName(category)}</span>
           </button>
         ))}
       </div>

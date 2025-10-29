@@ -1,0 +1,19 @@
+{
+  "home": {
+    "companyName": "HALAL HALL",
+    "subtitle": "LAGMANHANA",
+    "menuButton": "Go to Menu"
+  },
+  "menu": {
+    "title": "Kitchen",
+    "goToMenu": "Go to Menu",
+    "bar": "Bar",
+    "pizza": "Pizza"
+  },
+  "language": {
+    "select": "Language",
+    "en": "English",
+    "ru": "Русский",
+    "kk": "Қазақша"
+  }
+}

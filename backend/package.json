@@ -7,6 +7,12 @@
     "dev": "node --watch server-postgres.js",
     "init-db": "node init-database.js",
     "init-postgres": "node init-postgres.js",
+    "migrate-localization": "node migrations/add-localization.js",
+    "fill-translations": "node migrations/fill-translations.js",
+    "test-translations": "node migrations/add-test-translations.js",
+    "add-bar-pizza": "node migrations/add-bar-pizza-categories.js",
+    "add-bar-pizza-dishes": "node migrations/add-bar-pizza-dishes.js",
+    "remove-sushi-rolls": "node migrations/remove-sushi-rolls.js",
     "start-old": "node server.js",
     "dev-old": "node --watch server.js"
   },

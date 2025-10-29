@@ -70,11 +70,11 @@ const upload = multer({
 
 // ============= PUBLIC API ROUTES =============
 
-// Get all categories
+// Get all categories with localization
 app.get('/api/categories', async (req, res) => {
   try {
     const result = await pool.query(
-      'SELECT * FROM categories ORDER BY display_order'
+      'SELECT id, name_ru, name_en, name_kk, display_order, created_at, updated_at FROM categories ORDER BY display_order'
     );
     res.json(result.rows);
   } catch (error) {
@@ -83,11 +83,11 @@ app.get('/api/categories', async (req, res) => {
   }
 });
 
-// Get dishes by category
+// Get dishes by category with localization
 app.get('/api/dishes', async (req, res) => {
   try {
     const { categoryId } = req.query;
-    let query = 'SELECT * FROM dishes WHERE is_available = true';
+    let query = 'SELECT id, category_id, name, description_ru, description_en, description_kk, price, image_url, weight, ingredients_text, is_available, created_at, updated_at FROM dishes WHERE is_available = true';
     const params = [];
     
     if (categoryId) {
@@ -193,10 +193,12 @@ app.get('/api/admin/categories', authenticateToken, async (req, res) => {
   }
 });
 
-// Create new category
-app.post('/api/admin/categories', 
+// Create category with localization
+app.post('/api/admin/categories',
   authenticateToken,
-  body('name').notEmpty().withMessage('Category name is required'),
+  body('name_ru').notEmpty(),
+  body('name_en').optional(),
+  body('name_kk').optional(),
   body('display_order').optional().isInt(),
   async (req, res) => {
     const errors = validationResult(req);
@@ -204,29 +206,28 @@ app.post('/api/admin/categories',
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const { name, display_order } = req.body;
+    const { name_ru, name_en, name_kk, display_order } = req.body;
     
     try {
       const result = await pool.query(
-        'INSERT INTO categories (name, display_order) VALUES ($1, $2) RETURNING *',
-        [name, display_order || 0]
+        'INSERT INTO categories (name_ru, name_en, name_kk, display_order) VALUES ($1, $2, $3, $4) RETURNING *',
+        [name_ru, name_en || name_ru, name_kk || name_ru, display_order || 0]
       );
       
       res.json(result.rows[0]);
     } catch (error) {
-      if (error.code === '23505') { // Unique violation
-        return res.status(400).json({ error: 'Category with this name already exists' });
-      }
       console.error('Error creating category:', error);
       res.status(500).json({ error: 'Failed to create category' });
     }
   }
 );
 
-// Update category
+// Update category with localization
 app.put('/api/admin/categories/:id', 
   authenticateToken,
-  body('name').optional().notEmpty(),
+  body('name_ru').optional().notEmpty(),
+  body('name_en').optional(),
+  body('name_kk').optional(),
   body('display_order').optional().isInt(),
   async (req, res) => {
     const errors = validationResult(req);
@@ -235,16 +236,24 @@ app.put('/api/admin/categories/:id',
     }
 
     const { id } = req.params;
-    const { name, display_order } = req.body;
+    const { name_ru, name_en, name_kk, display_order } = req.body;
     
     try {
       const updates = [];
       const values = [];
       let paramCount = 1;
 
-      if (name !== undefined) {
-        updates.push(`name = $${paramCount++}`);
-        values.push(name);
+      if (name_ru !== undefined) {
+        updates.push(`name_ru = $${paramCount++}`);
+        values.push(name_ru);
+      }
+      if (name_en !== undefined) {
+        updates.push(`name_en = $${paramCount++}`);
+        values.push(name_en);
+      }
+      if (name_kk !== undefined) {
+        updates.push(`name_kk = $${paramCount++}`);
+        values.push(name_kk);
       }
       if (display_order !== undefined) {
         updates.push(`display_order = $${paramCount++}`);
@@ -315,12 +324,12 @@ app.delete('/api/admin/categories/:id', authenticateToken, async (req, res) => {
 
 // ============= ADMIN DISH ROUTES (Protected) =============
 
-// Get all dishes (admin - includes unavailable)
+// Get all dishes (admin - includes unavailable) with localization
 app.get('/api/admin/dishes', authenticateToken, async (req, res) => {
   try {
     const { categoryId } = req.query;
     let query = `
-      SELECT d.*, c.name as category_name 
+      SELECT d.*, c.name_ru as category_name 
       FROM dishes d
       LEFT JOIN categories c ON d.category_id = c.id
     `;
@@ -341,16 +350,17 @@ app.get('/api/admin/dishes', authenticateToken, async (req, res) => {
   }
 });
 
-// Create new dish
+// Create new dish with localization
 app.post('/api/admin/dishes', 
   authenticateToken,
   body('category_id').isInt().withMessage('Valid category ID is required'),
   body('name').notEmpty().withMessage('Dish name is required'),
   body('price').isFloat({ min: 0 }).withMessage('Valid price is required'),
-  body('description').optional(),
+  body('description_ru').optional(),
+  body('description_en').optional(),
+  body('description_kk').optional(),
   body('image_url').optional().custom((value) => {
     if (value && value.trim() !== '') {
-      // Only validate URL if value is provided and not empty
       const urlRegex = /^(https?:\/\/)|(\/uploads\/)/;
       if (!urlRegex.test(value)) {
         throw new Error('Invalid image URL');
@@ -370,7 +380,9 @@ app.post('/api/admin/dishes',
     const { 
       category_id, 
       name, 
-      description, 
+      description_ru, 
+      description_en,
+      description_kk,
       price, 
       image_url, 
       weight, 
@@ -391,10 +403,10 @@ app.post('/api/admin/dishes',
 
       const result = await pool.query(
         `INSERT INTO dishes 
-         (category_id, name, description, price, image_url, weight, ingredients_text, is_available) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         (category_id, name, description_ru, description_en, description_kk, price, image_url, weight, ingredients_text, is_available) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
          RETURNING *`,
-        [category_id, name, description, price, image_url, weight, ingredients_text, is_available]
+        [category_id, name, description_ru, description_en || description_ru, description_kk || description_ru, price, image_url, weight, ingredients_text, is_available]
       );
       
       res.json(result.rows[0]);
@@ -405,13 +417,15 @@ app.post('/api/admin/dishes',
   }
 );
 
-// Update dish
+// Update dish with localization
 app.put('/api/admin/dishes/:id', 
   authenticateToken,
   body('category_id').optional().isInt(),
   body('name').optional().notEmpty(),
   body('price').optional().isFloat({ min: 0 }),
-  body('description').optional(),
+  body('description_ru').optional(),
+  body('description_en').optional(),
+  body('description_kk').optional(),
   body('image_url').optional().custom((value) => {
     if (value && value.trim() !== '') {
       const urlRegex = /^(https?:\/\/)|(\/uploads\/)/;
@@ -439,8 +453,10 @@ app.put('/api/admin/dishes/:id',
       const values = [];
       let paramCount = 1;
 
+      const allowedFields = ['category_id', 'name', 'description_ru', 'description_en', 'description_kk', 'price', 'image_url', 'weight', 'ingredients_text', 'is_available'];
+      
       for (const [key, value] of Object.entries(fields)) {
-        if (value !== undefined) {
+        if (value !== undefined && allowedFields.includes(key)) {
           updates.push(`${key} = $${paramCount++}`);
           values.push(value);
         }

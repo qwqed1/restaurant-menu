@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Info, Sparkles } from 'lucide-react';
 
 const DishModal = ({ dish, onClose }) => {
+  const { i18n } = useTranslation();
+
   useEffect(() => {
     if (!dish) return;
 
@@ -16,6 +19,14 @@ const DishModal = ({ dish, onClose }) => {
   }, [dish, onClose]);
 
   if (!dish) return null;
+
+  // Get description based on current language
+  const getDescription = () => {
+    const lang = i18n.language;
+    if (lang === 'en' && dish.description_en) return dish.description_en;
+    if (lang === 'kk' && dish.description_kk) return dish.description_kk;
+    return dish.description_ru || dish.description;
+  };
 
   return (
     <div
@@ -36,9 +47,9 @@ const DishModal = ({ dish, onClose }) => {
           <div className="relative p-8 flex flex-col justify-center items-center bg-gradient-to-b from-menu-green/40 to-menu-green/10">
             <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_top,_var(--tw-gradient-stops))] from-menu-gold via-transparent to-transparent" />
             <img
-              src={dish.imageUrl}
+              src={dish.imageUrl || dish.image_url}
               alt={dish.name}
-              className="relative z-10 w-48 h-48 md:w-56 md:h-56 rounded-full object-cover ring-4 ring-menu-gold/60"
+              className="relative z-10 w-64 h-64 md:w-80 md:h-80 object-cover ring-4 ring-menu-gold/60 shadow-2xl"
             />
             <div className="relative z-10 mt-6 flex flex-col items-center text-center">
               <div className="flex items-center gap-2 text-menu-gold/90 uppercase tracking-[0.3em] text-xs">
@@ -56,15 +67,15 @@ const DishModal = ({ dish, onClose }) => {
                 <Info className="w-4 h-4" /> Описание
               </div>
               <p className="text-menu-cream/85 leading-relaxed text-base md:text-lg">
-                {dish.description}
+                {getDescription()}
               </p>
             </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
-              <div className="rounded-2xl border border-menu-gold/30 bg-menu-green/60 p-4 text-center shadow-lg shadow-menu-gold/10">
-                <div className="text-sm text-menu-gold/80 uppercase tracking-[0.2em]">Цена</div>
-                <div className="mt-2 text-3xl font-bold text-menu-gold drop-shadow-lg">
-                  {dish.price}<span className="ml-1 text-base font-medium">₸</span>
+              <div className="rounded-2xl bg-gradient-to-br from-menu-green/80 to-menu-green/60 p-5 text-center shadow-2xl shadow-menu-gold/40">
+                <div className="text-sm text-menu-green font-light uppercase tracking-[0.2em]">Цена</div>
+                <div className="mt-2 text-4xl font-light text-menu-gold">
+                  {Math.floor(dish.price)} ₸
                 </div>
               </div>
 
@@ -95,7 +106,7 @@ const DishModal = ({ dish, onClose }) => {
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 rounded-full bg-menu-gold text-menu-green font-semibold hover:bg-menu-gold/90 transition-all duration-300 shadow-lg hover:shadow-menu-gold/40"
+                className="px-6 py-2.5 rounded-full bg-transparent border-2 border-menu-gold text-menu-gold font-semibold hover:bg-menu-gold/20 transition-all duration-300"
               >
                 Закрыть
               </button>

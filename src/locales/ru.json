@@ -1,0 +1,19 @@
+{
+  "home": {
+    "companyName": "HALAL HALL",
+    "subtitle": "ЛАҒМАНХАНА",
+    "menuButton": "Перейти в меню"
+  },
+  "menu": {
+    "title": "Кухня",
+    "goToMenu": "Перейти в меню",
+    "bar": "Бар",
+    "pizza": "Пицца"
+  },
+  "language": {
+    "select": "Язык",
+    "en": "English",
+    "ru": "Русский",
+    "kk": "Қазақша"
+  }
+}

@@ -1,62 +1,56 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Header from './components/Header';
-import Sidebar from './components/Sidebar';
-import DishList from './components/DishList';
-import DishModal from './components/DishModal';
-import './i18n';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
+import DishList from '../components/DishList';
+import DishModal from '../components/DishModal';
+import '../i18n';
 
-function App() {
+function PizzaPage() {
   const navigate = useNavigate();
   const { t } = useTranslation();
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [categories, setCategories] = useState([]);
   const [dishes, setDishes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [useAPI, setUseAPI] = useState(import.meta.env.VITE_USE_API === 'true'); // Toggle between API and mock data
+  const [useAPI, setUseAPI] = useState(import.meta.env.VITE_USE_API === 'true');
   const [activeDish, setActiveDish] = useState(null);
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
-  // Category images mapping
   const categoryImages = {
-    1: 'https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=400&h=400&fit=crop', // Завтраки
-    2: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&h=400&fit=crop', // Супы
-    3: 'https://images.unsplash.com/photo-1529042410759-befb1204b468?w=400&h=400&fit=crop', // Салаты
-    4: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&h=400&fit=crop', // Основные блюда
-    5: 'https://images.unsplash.com/photo-1551024506-0bccd828d307?w=400&h=400&fit=crop', // Десерты
-    6: 'https://images.unsplash.com/photo-1544145945-f90425340c7e?w=400&h=400&fit=crop', // Напитки
-  }
+    16: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=400&fit=crop', // Пицца
+  };
 
   const loadDataFromAPI = () => {
     if (useAPI) {
-      // Fetch from API
       Promise.all([
         fetch(`${API_URL}/api/categories`).then(res => res.json()),
         fetch(`${API_URL}/api/dishes`).then(res => res.json())
       ])
         .then(([categoriesData, dishesData]) => {
-          // Exclude bar and pizza categories from Kitchen: Лимонады, Чаи, Прохладительные напитки, Пицца
-          const excluded = new Set(['лимонады', 'чаи', 'прохладительные напитки', 'пицца']);
-          const isExcluded = (cat) => {
+          // Filter only pizza category by exact name match
+          const targets = new Set(['пицца']);
+          const isTarget = (cat) => {
             const ru = (cat.name_ru || '').toLowerCase();
             const en = (cat.name_en || '').toLowerCase();
             const kk = (cat.name_kk || '').toLowerCase();
-            return excluded.has(ru) || excluded.has(en) || excluded.has(kk);
+            return targets.has(ru) || targets.has(en) || targets.has(kk) || en === 'pizza';
           };
-
-          const kitchenCategories = categoriesData.filter(cat => !isExcluded(cat));
-          const excludedIds = categoriesData.filter(isExcluded).map(c => c.id);
+          const pizzaCategories = categoriesData.filter(isTarget);
           
-          setCategories(kitchenCategories);
+          setCategories(pizzaCategories);
           
-          // Transform dishes data: convert snake_case to camelCase and fix image URLs
-          const transformedDishes = dishesData
-            .filter(dish => !excludedIds.includes(dish.category_id))
-            .map(dish => ({
+          // Filter dishes for pizza categories only
+          const pizzaCategoryIds = pizzaCategories.map(c => c.id);
+          const pizzaDishes = dishesData.filter(dish => 
+            pizzaCategoryIds.includes(dish.category_id)
+          );
+          
+          const transformedDishes = pizzaDishes.map(dish => ({
             id: dish.id,
             categoryId: dish.category_id,
             name: dish.name,
@@ -66,7 +60,6 @@ function App() {
             description_kk: dish.description_kk,
             price: dish.price,
             weight: dish.weight,
-            // Fix image URL: if it starts with /uploads/, prepend API_URL
             imageUrl: dish.image_url?.startsWith('/uploads/') 
               ? `${API_URL}${dish.image_url}`
               : dish.image_url,
@@ -79,12 +72,8 @@ function App() {
         })
         .catch(error => {
           console.error('Error fetching data from API:', error);
-          // Fallback to mock data if API fails
-          loadMockData();
+          setLoading(false);
         });
-    } else {
-      // Use mock data
-      loadMockData();
     }
   };
 
@@ -97,8 +86,7 @@ function App() {
     if (useAPI) {
       const interval = setInterval(() => {
         loadDataFromAPI();
-      }, 30000); // Refresh every 30 seconds
-
+      }, 30000);
       return () => clearInterval(interval);
     }
   }, [useAPI, API_URL]);
@@ -111,19 +99,11 @@ function App() {
         setTimeout(() => {
           setCurrentCarouselIndex((prev) => (prev + 1) % categories.length);
           setIsAnimating(false);
-        }, 500); // Half of animation duration
-      }, 4000); // Change every 4 seconds
-
+        }, 500);
+      }, 4000);
       return () => clearInterval(interval);
     }
   }, [selectedCategory, categories]);
-
-  const loadMockData = async () => {
-    const { menuData } = await import('./data/mockMenu');
-    setCategories(menuData.categories);
-    setDishes(menuData.dishes);
-    setLoading(false);
-  };
 
   const handleGoBack = () => {
     setSelectedCategory(null);
@@ -149,9 +129,8 @@ function App() {
     ? dishes.filter(dish => (dish.categoryId || dish.category_id) === selectedCategory)
     : [];
 
-  // Get category name based on current language
   const getCategoryName = (category) => {
-    if (!category) return t('menu.title');
+    if (!category) return t('menu.pizza');
     const lang = t.i18n?.language || 'ru';
     if (lang === 'en' && category.name_en) return category.name_en;
     if (lang === 'kk' && category.name_kk) return category.name_kk;
@@ -160,21 +139,17 @@ function App() {
 
   const currentTitle = selectedCategory 
     ? getCategoryName(categories.find(cat => cat.id === selectedCategory))
-    : t('menu.title');
+    : (t('menu.pizza') || 'Пицца');
 
   const currentCarouselCategory = categories[currentCarouselIndex];
   
-  // Get first dish from current category
   const firstDishInCategory = currentCarouselCategory
     ? dishes.find(dish => (dish.categoryId || dish.category_id) === currentCarouselCategory.id)
     : null;
   
-  // Use first dish image if available, otherwise fallback to category image
   const currentImage = firstDishInCategory?.imageUrl 
-    ? firstDishInCategory.imageUrl
-    : (currentCarouselCategory 
-        ? (categoryImages[currentCarouselCategory.id] || 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop')
-        : 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=400&fit=crop');
+    || categoryImages[currentCarouselCategory?.id] 
+    || 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=400&h=400&fit=crop';
 
   if (loading) {
     return (
@@ -189,7 +164,7 @@ function App() {
 
   return (
     <div className="min-h-screen bg-menu-green relative overflow-hidden">
-      {/* Background with blur effect - no green overlay */}
+      {/* Background with blur effect */}
       <div className="absolute inset-0 z-0">
         <div 
           className="absolute inset-0 bg-cover bg-center opacity-40"
@@ -224,7 +199,7 @@ function App() {
             </>
           ) : (
             <div className="flex-1 flex">
-              {/* Left side content - positioned left but not at edge */}
+              {/* Left side content */}
               <div className="flex-1 flex items-center justify-center">
                 <div className="relative">
                   <div className="relative z-10 text-center">
@@ -248,12 +223,12 @@ function App() {
                       </div>
                     </div>
                     
-                    {/* Fixed button - stays in place */}
+                    {/* Fixed button */}
                     <button 
                       onClick={() => currentCarouselCategory && setSelectedCategory(currentCarouselCategory.id)}
                       className="px-10 py-4 bg-transparent border-3 border-menu-gold text-menu-gold text-base font-semibold rounded-full flex items-center gap-2 mx-auto hover:bg-menu-gold/20 transition-all duration-300"
                     >
-                      <span className="text-menu-gold">📋</span>
+                      <span className="text-menu-gold">🍕</span>
                       {t('menu.goToMenu')}
                     </button>
                   </div>
@@ -276,4 +251,4 @@ function App() {
   );
 }
 
-export default App;
+export default PizzaPage;

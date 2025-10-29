@@ -8,7 +8,7 @@ export default {
     extend: {
       colors: {
         'menu-green': '#0D3B2F',
-        'menu-gold': '#C8A86B',
+        'menu-gold': '#cab57c',
         'menu-cream': '#FFF8E1',
       },
       backdropBlur: {

@@ -19,7 +19,9 @@ function CategoriesManager({ onUpdate }) {
   const [showModal, setShowModal] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
   const [formData, setFormData] = useState({
-    name: '',
+    name_ru: '',
+    name_en: '',
+    name_kk: '',
     display_order: 0
   });
   const [formErrors, setFormErrors] = useState({});
@@ -45,7 +47,7 @@ function CategoriesManager({ onUpdate }) {
 
     // Validation
     const errors = {};
-    if (!formData.name) errors.name = 'Название обязательно';
+    if (!formData.name_ru) errors.name_ru = 'Название на русском обязательно';
 
     if (Object.keys(errors).length > 0) {
       setFormErrors(errors);
@@ -135,14 +137,18 @@ function CategoriesManager({ onUpdate }) {
     if (category) {
       setEditingCategory(category);
       setFormData({
-        name: category.name,
+        name_ru: category.name_ru || category.name || '',
+        name_en: category.name_en || '',
+        name_kk: category.name_kk || '',
         display_order: category.display_order
       });
     } else {
       setEditingCategory(null);
       const maxOrder = Math.max(...categories.map(c => c.display_order), 0);
       setFormData({
-        name: '',
+        name_ru: '',
+        name_en: '',
+        name_kk: '',
         display_order: maxOrder + 10
       });
     }
@@ -154,7 +160,9 @@ function CategoriesManager({ onUpdate }) {
     setShowModal(false);
     setEditingCategory(null);
     setFormData({
-      name: '',
+      name_ru: '',
+      name_en: '',
+      name_kk: '',
       display_order: 0
     });
     setFormErrors({});
@@ -222,7 +230,7 @@ function CategoriesManager({ onUpdate }) {
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <Grid3x3 className="w-5 h-5 text-gray-400" />
-                      <span className="text-sm font-medium text-gray-900">{category.name}</span>
+                      <span className="text-sm font-medium text-gray-900">{category.name_ru || category.name}</span>
                     </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -292,18 +300,44 @@ function CategoriesManager({ onUpdate }) {
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Название категории *
+                  Название на русском *
                 </label>
                 <input
                   type="text"
-                  value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
-                  className={`w-full px-4 py-2 border ${formErrors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green`}
+                  value={formData.name_ru}
+                  onChange={(e) => setFormData({...formData, name_ru: e.target.value})}
+                  className={`w-full px-4 py-2 border ${formErrors.name_ru ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green`}
                   placeholder="Например: Завтраки"
                 />
-                {formErrors.name && (
-                  <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>
+                {formErrors.name_ru && (
+                  <p className="mt-1 text-sm text-red-500">{formErrors.name_ru}</p>
                 )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Название на английском
+                </label>
+                <input
+                  type="text"
+                  value={formData.name_en}
+                  onChange={(e) => setFormData({...formData, name_en: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green"
+                  placeholder="Например: Breakfast"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Название на казахском
+                </label>
+                <input
+                  type="text"
+                  value={formData.name_kk}
+                  onChange={(e) => setFormData({...formData, name_kk: e.target.value})}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green"
+                  placeholder="Например: Таңғы ас"
+                />
               </div>
 
               <div>
