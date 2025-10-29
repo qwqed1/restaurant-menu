@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 import fs from 'fs';
 import pool from './config/database.js';
 import { authenticateToken, generateToken } from './middleware/auth.js';
+import { autoInitDatabase } from './auto-init.js';
 
 dotenv.config();
 
@@ -647,6 +648,9 @@ app.listen(PORT, async () => {
   console.log(`🚀 Server is running on port ${PORT}`);
   console.log(`📡 API endpoints available at /api`);
   console.log(`🔐 Admin endpoints available at /api/admin`);
+  
+  // Auto-initialize database if needed
+  await autoInitDatabase();
   
   // Get local IP address (only for local development)
   if (process.env.NODE_ENV !== 'production') {
