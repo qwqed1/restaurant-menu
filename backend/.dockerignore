@@ -1,0 +1,47 @@
+# Node modules
+node_modules
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+
+# Environment files
+.env
+.env.*
+
+# Uploads (will be mounted as volume)
+uploads/*
+!uploads/.gitkeep
+
+# Logs
+*.log
+logs
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Tests
+__tests__
+*.test.js
+*.spec.js
+coverage
+.nyc_output
+
+# Documentation
+*.md
+
+# Git
+.git
+.gitignore
+
+# Temporary files
+*.tmp
+temp
+tmp
+
+# OS files
+.DS_Store
+Thumbs.db

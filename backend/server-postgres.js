@@ -634,13 +634,35 @@ app.delete('/api/admin/users/:id', authenticateToken, async (req, res) => {
   }
 });
 
-// Health check endpoint
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'healthy', 
-    timestamp: new Date().toISOString(),
-    database: 'PostgreSQL'
-  });
+// Health check endpoints
+app.get('/health', async (req, res) => {
+  try {
+    // Test database connection
+    await pool.query('SELECT 1');
+    res.status(200).send('OK');
+  } catch (error) {
+    res.status(503).send('Service Unavailable');
+  }
+});
+
+app.get('/api/health', async (req, res) => {
+  try {
+    // Test database connection
+    const dbCheck = await pool.query('SELECT NOW()');
+    res.json({ 
+      status: 'healthy', 
+      timestamp: new Date().toISOString(),
+      database: 'connected',
+      dbTime: dbCheck.rows[0].now
+    });
+  } catch (error) {
+    res.status(503).json({ 
+      status: 'unhealthy', 
+      timestamp: new Date().toISOString(),
+      database: 'disconnected',
+      error: error.message
+    });
+  }
 });
 
 // Start server
