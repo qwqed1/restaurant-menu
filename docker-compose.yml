@@ -61,7 +61,7 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
       args:
-        VITE_API_URL: ${VITE_API_URL:-http://localhost/api}
+        VITE_API_URL: ${VITE_API_URL:-http://localhost}
         VITE_USE_API: "true"
     container_name: halal_hall_frontend
     restart: always

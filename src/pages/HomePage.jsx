@@ -25,25 +25,25 @@ const HomePage = () => {
         <div className="absolute inset-0 overflow-hidden opacity-10">
           {/* Top left pattern */}
           <img 
-            src="/src/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
+            src="/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
             alt="" 
             className="absolute -top-20 -left-20 w-96 h-96 object-contain opacity-30 rotate-12"
           />
           {/* Top right pattern */}
           <img 
-            src="/src/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
+            src="/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
             alt="" 
             className="absolute -top-32 -right-32 w-80 h-80 object-contain opacity-20 -rotate-45"
           />
           {/* Bottom left pattern */}
           <img 
-            src="/src/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
+            src="/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
             alt="" 
             className="absolute -bottom-24 -left-24 w-72 h-72 object-contain opacity-25 -rotate-12"
           />
           {/* Bottom right pattern */}
           <img 
-            src="/src/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
+            src="/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
             alt="" 
             className="absolute -bottom-40 -right-40 w-96 h-96 object-contain opacity-15 rotate-45"
           />
@@ -54,7 +54,7 @@ const HomePage = () => {
           {/* Logo image */}
           <div className="mb-4">
             <img 
-              src="/src/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
+              src="/img/изображение_2025-10-28_150307864_2025-10-28T10-03-07-900Z (1).png" 
               alt="Halal Hall Logo" 
               className="w-80 h-80 mx-auto object-contain"
             />
