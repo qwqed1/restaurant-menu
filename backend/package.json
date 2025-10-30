@@ -15,8 +15,12 @@
     "fill-translations": "node migrations/fill-translations.js",
     "test-translations": "node migrations/add-test-translations.js",
     "add-bar-pizza": "node migrations/add-bar-pizza-categories.js",
+    "add-bar-drinks": "node migrations/add-bar-drinks.js",
     "add-bar-pizza-dishes": "node migrations/add-bar-pizza-dishes.js",
     "remove-sushi-rolls": "node migrations/remove-sushi-rolls.js",
+    "update-categories": "node migrations/update-categories.js",
+    "restore-bar": "node migrations/restore-bar-categories.js",
+    "add-page-field": "node migrations/add-page-field.js",
     "railway-init": "node railway-init.js",
     "start-old": "node server.js",
     "dev-old": "node --watch server.js"
