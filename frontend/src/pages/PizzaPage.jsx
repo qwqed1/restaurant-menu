@@ -51,6 +51,9 @@ function PizzaPage() {
             id: dish.id,
             categoryId: dish.category_id,
             name: dish.name,
+            name_ru: dish.name_ru,
+            name_en: dish.name_en,
+            name_kk: dish.name_kk,
             description: dish.description,
             description_ru: dish.description_ru,
             description_en: dish.description_en,
@@ -182,28 +185,52 @@ function PizzaPage() {
           showBack={selectedCategory !== null}
         />
 
+        {/* Mobile category selector - only visible on mobile when category is selected */}
+        {selectedCategory && (
+          <div className="md:hidden bg-menu-green/80 backdrop-blur-sm border-b border-menu-gold/20 px-4 py-3 overflow-x-auto">
+            <div className="flex gap-2 min-w-max">
+              {categories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => setSelectedCategory(category.id)}
+                  className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-all duration-300 ${
+                    selectedCategory === category.id
+                      ? 'bg-menu-gold text-menu-green shadow-lg'
+                      : 'bg-menu-green/50 text-menu-cream border border-menu-gold/30'
+                  }`}
+                >
+                  {getCategoryName(category)}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="flex-1 flex overflow-hidden">
           {selectedCategory ? (
             <>
               <div className="flex-1 overflow-y-auto animate-fadeIn">
                 <DishList dishes={filteredDishes} onViewDish={handleViewDish} />
               </div>
-              <Sidebar 
-                categories={categories}
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-              />
+              {/* Hide sidebar on mobile (md:flex) */}
+              <div className="hidden md:block">
+                <Sidebar 
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={setSelectedCategory}
+                />
+              </div>
             </>
           ) : (
             <div className="flex-1 flex">
               {/* Left side content */}
               <div className="flex-1 flex items-center justify-center">
                 <div className="relative">
-                  <div className="relative z-10 text-center">
+                  <div className="relative z-10 text-center px-4">
                     {/* Animated Dish image and category */}
                     <div className="mb-4">
                       <div 
-                        className={`transition-all duration-1000 overflow-hidden p-8 ${
+                        className={`transition-all duration-1000 overflow-hidden p-4 md:p-8 ${
                           isAnimating ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'
                         }`}
                       >
@@ -211,10 +238,10 @@ function PizzaPage() {
                           key={currentCarouselIndex}
                           src={currentImage}
                           alt={currentCarouselCategory?.name || 'Featured dish'}
-                          className="w-64 h-64 rounded-full object-cover mx-auto mb-6 ring-4 ring-menu-gold/60"
+                          className="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover mx-auto mb-4 md:mb-6 ring-4 ring-menu-gold/60"
                         />
                         
-                        <h2 className="text-3xl font-light text-menu-cream drop-shadow-lg">
+                        <h2 className="text-2xl md:text-3xl font-light text-menu-cream drop-shadow-lg">
                           {getCategoryName(currentCarouselCategory)}
                         </h2>
                       </div>
@@ -223,7 +250,7 @@ function PizzaPage() {
                     {/* Fixed button */}
                     <button 
                       onClick={() => currentCarouselCategory && setSelectedCategory(currentCarouselCategory.id)}
-                      className="px-10 py-4 bg-transparent border-3 border-menu-gold text-menu-gold text-base font-semibold rounded-full flex items-center gap-2 mx-auto hover:bg-menu-gold/20 transition-all duration-300"
+                      className="px-6 md:px-10 py-3 md:py-4 bg-transparent border-3 border-menu-gold text-menu-gold text-sm md:text-base font-semibold rounded-full flex items-center gap-2 mx-auto hover:bg-menu-gold/20 transition-all duration-300"
                     >
                       <span className="text-menu-gold">🍕</span>
                       {t('menu.goToMenu')}
@@ -232,12 +259,14 @@ function PizzaPage() {
                 </div>
               </div>
 
-              {/* Right sidebar - fixed */}
-              <Sidebar 
-                categories={categories}
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-              />
+              {/* Right sidebar - hidden on mobile */}
+              <div className="hidden md:block">
+                <Sidebar 
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={setSelectedCategory}
+                />
+              </div>
             </div>
           )}
         </div>

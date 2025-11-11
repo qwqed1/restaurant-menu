@@ -56,6 +56,14 @@ const MenuPage = () => {
       const excludedIds = categoriesData.filter(isExcluded).map(c => c.id);
       const kitchenDishes = dishesData.filter(d => !excludedIds.includes(d.category_id));
 
+      // Debug: check if name fields are present
+      if (kitchenDishes.length > 0) {
+        console.log('Sample dish data:', kitchenDishes[0]);
+        console.log('Has name_ru?', 'name_ru' in kitchenDishes[0]);
+        console.log('Has name_en?', 'name_en' in kitchenDishes[0]);
+        console.log('Has name_kk?', 'name_kk' in kitchenDishes[0]);
+      }
+
       setCategories(kitchenCategories);
       setDishes(kitchenDishes);
     } catch (error) {

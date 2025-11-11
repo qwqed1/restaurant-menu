@@ -24,7 +24,8 @@ app.use(cors({
   origin: '*', // Allow all origins for IP access
   credentials: true
 }));
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ limit: '10mb', extended: true }));
 
 // Create uploads directory if it doesn't exist
 const uploadsDir = path.join(__dirname, 'uploads');
@@ -53,7 +54,7 @@ const storage = multer.diskStorage({
 const fileFilter = (req, file, cb) => {
   const allowedTypes = /jpeg|jpg|png|gif|webp/;
   const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
-  const mimetype = allowedTypes.test(file.mimetype);
+  const mimetype = file.mimetype.startsWith('image/');
   
   if (extname && mimetype) {
     cb(null, true);
@@ -62,9 +63,26 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+// Global multer error handler
+const handleMulterError = (error, req, res, next) => {
+  if (error instanceof multer.MulterError) {
+    if (error.code === 'LIMIT_FILE_SIZE') {
+      return res.status(400).json({ error: 'Размер файла превышает 10MB' });
+    }
+    if (error.code === 'LIMIT_FILE_COUNT' || error.code === 'LIMIT_UNEXPECTED_FILE') {
+      return res.status(400).json({ error: 'Неверное количество файлов' });
+    }
+    return res.status(400).json({ error: 'Ошибка загрузки файла: ' + error.message });
+  }
+  if (error.message.includes('Только изображения')) {
+    return res.status(400).json({ error: error.message });
+  }
+  next(error);
+};
+
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 5 * 1024 * 1024 }, // 5MB max
+  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB max
   fileFilter: fileFilter
 });
 
@@ -87,7 +105,7 @@ app.get('/api/categories', async (req, res) => {
 app.get('/api/dishes', async (req, res) => {
   try {
     const { categoryId } = req.query;
-    let query = 'SELECT id, category_id, name, description_ru, description_en, description_kk, price, image_url, weight, ingredients_text, is_available, created_at, updated_at FROM dishes WHERE is_available = true';
+    let query = 'SELECT id, category_id, name, name_ru, name_en, name_kk, description_ru, description_en, description_kk, price, image_url, weight, ingredients_text, is_available, created_at, updated_at FROM dishes WHERE is_available = true';
     const params = [];
     
     if (categoryId) {
@@ -354,7 +372,10 @@ app.get('/api/admin/dishes', authenticateToken, async (req, res) => {
 app.post('/api/admin/dishes', 
   authenticateToken,
   body('category_id').isInt().withMessage('Valid category ID is required'),
-  body('name').notEmpty().withMessage('Dish name is required'),
+  body('name').optional(),
+  body('name_ru').notEmpty().withMessage('Dish name (Russian) is required'),
+  body('name_en').optional(),
+  body('name_kk').optional(),
   body('price').isFloat({ min: 0 }).withMessage('Valid price is required'),
   body('description_ru').optional(),
   body('description_en').optional(),
@@ -380,6 +401,9 @@ app.post('/api/admin/dishes',
     const { 
       category_id, 
       name, 
+      name_ru,
+      name_en,
+      name_kk,
       description_ru, 
       description_en,
       description_kk,
@@ -403,10 +427,10 @@ app.post('/api/admin/dishes',
 
       const result = await pool.query(
         `INSERT INTO dishes 
-         (category_id, name, description_ru, description_en, description_kk, price, image_url, weight, ingredients_text, is_available) 
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+         (category_id, name, name_ru, name_en, name_kk, description_ru, description_en, description_kk, price, image_url, weight, ingredients_text, is_available) 
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13)
          RETURNING *`,
-        [category_id, name, description_ru, description_en || description_ru, description_kk || description_ru, price, image_url, weight, ingredients_text, is_available]
+        [category_id, name || name_ru, name_ru, name_en || name_ru, name_kk || name_ru, description_ru, description_en || description_ru, description_kk || description_ru, price, image_url, weight, ingredients_text, is_available]
       );
       
       res.json(result.rows[0]);
@@ -421,7 +445,10 @@ app.post('/api/admin/dishes',
 app.put('/api/admin/dishes/:id', 
   authenticateToken,
   body('category_id').optional().isInt(),
-  body('name').optional().notEmpty(),
+  body('name').optional(),
+  body('name_ru').optional().notEmpty(),
+  body('name_en').optional(),
+  body('name_kk').optional(),
   body('price').optional().isFloat({ min: 0 }),
   body('description_ru').optional(),
   body('description_en').optional(),
@@ -453,7 +480,7 @@ app.put('/api/admin/dishes/:id',
       const values = [];
       let paramCount = 1;
 
-      const allowedFields = ['category_id', 'name', 'description_ru', 'description_en', 'description_kk', 'price', 'image_url', 'weight', 'ingredients_text', 'is_available'];
+      const allowedFields = ['category_id', 'name', 'name_ru', 'name_en', 'name_kk', 'description_ru', 'description_en', 'description_kk', 'price', 'image_url', 'weight', 'ingredients_text', 'is_available'];
       
       for (const [key, value] of Object.entries(fields)) {
         if (value !== undefined && allowedFields.includes(key)) {
@@ -534,7 +561,7 @@ app.patch('/api/admin/dishes/:id/toggle-availability', authenticateToken, async 
 });
 
 // Upload image for dish
-app.post('/api/admin/upload-image', authenticateToken, upload.single('image'), (req, res) => {
+app.post('/api/admin/upload-image', authenticateToken, upload.single('image'), handleMulterError, (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ error: 'Файл не загружен' });
