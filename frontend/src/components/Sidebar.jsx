@@ -20,14 +20,14 @@ const Sidebar = ({ categories, selectedCategory, onSelectCategory }) => {
           <button
             key={category.id}
             onClick={() => onSelectCategory(category.id)}
-            className={`w-full text-left py-3 px-4 rounded-lg flex items-center gap-3 border ${
+            className={`w-full text-left py-3 px-4 rounded-lg flex items-center gap-3 active:scale-95 transition-transform duration-200 ${
               selectedCategory === category.id
-                ? 'bg-menu-green border-menu-gold text-menu-gold font-semibold text-base shadow-lg shadow-menu-gold/30'
-                : 'border-transparent text-menu-cream/80 text-sm'
+                ? 'bg-menu-blue text-white font-semibold text-base shadow-lg'
+                : 'bg-menu-blue/70 text-white/90 text-sm'
             }`}
           >
-            <span className={`w-2 h-2 rounded-full flex-shrink-0 transition-all duration-300 ${
-              selectedCategory === category.id ? 'bg-menu-gold shadow-lg shadow-menu-gold/50' : 'bg-menu-cream/40'
+            <span className={`w-2 h-2 rounded-full flex-shrink-0 transition-all duration-200 ${
+              selectedCategory === category.id ? 'bg-white shadow-lg shadow-white/50' : 'bg-white/60'
             }`} />
             <span>{getCategoryName(category)}</span>
           </button>

@@ -1,0 +1,53 @@
+{
+  "manifest": {
+    "orientation": "landscape",
+    "installLocation": "auto",
+    "supportsScreens": {
+      "smallScreens": false,
+      "normalScreens": false,
+      "largeScreens": true,
+      "xlargeScreens": true,
+      "anyDensity": true
+    },
+    "permissions": [
+      "android.permission.INTERNET",
+      "android.permission.ACCESS_NETWORK_STATE",
+      "android.permission.WAKE_LOCK"
+    ],
+    "features": [
+      {
+        "name": "android.hardware.screen.landscape",
+        "required": false
+      },
+      {
+        "name": "android.hardware.touchscreen",
+        "required": true
+      }
+    ]
+  },
+  "gradle": {
+    "minSdkVersion": 21,
+    "targetSdkVersion": 34,
+    "compileSdkVersion": 34,
+    "buildToolsVersion": "34.0.0",
+    "applicationId": "com.halalhall.menu",
+    "versionCode": 1,
+    "versionName": "1.0.0"
+  },
+  "resources": {
+    "icon": {
+      "mdpi": "./resources/icon-48.png",
+      "hdpi": "./resources/icon-72.png",
+      "xhdpi": "./resources/icon-96.png",
+      "xxhdpi": "./resources/icon-144.png",
+      "xxxhdpi": "./resources/icon-192.png"
+    },
+    "splash": {
+      "mdpi": "./resources/splash-480x320.png",
+      "hdpi": "./resources/splash-800x480.png",
+      "xhdpi": "./resources/splash-1280x720.png",
+      "xxhdpi": "./resources/splash-1600x960.png",
+      "xxxhdpi": "./resources/splash-1920x1280.png"
+    }
+  }
+}

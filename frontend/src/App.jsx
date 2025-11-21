@@ -18,6 +18,7 @@ function App() {
   const [activeDish, setActiveDish] = useState(null);
   const [currentCarouselIndex, setCurrentCarouselIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isMobileCategoriesOpen, setIsMobileCategoriesOpen] = useState(false);
   
   const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
@@ -57,6 +58,9 @@ function App() {
             id: dish.id,
             categoryId: dish.category_id,
             name: dish.name,
+            name_ru: dish.name_ru,
+            name_en: dish.name_en,
+            name_kk: dish.name_kk,
             description: dish.description,
             description_ru: dish.description_ru,
             description_en: dish.description_en,
@@ -178,7 +182,7 @@ function App() {
       <div className="min-h-screen bg-menu-green flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 border-4 border-menu-green border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-menu-cream text-lg font-medium drop-shadow-md">Загрузка меню...</p>
+          <p className="text-white text-lg font-medium drop-shadow-md">Загрузка меню...</p>
         </div>
       </div>
     );
@@ -210,25 +214,77 @@ function App() {
         <div className="flex-1 flex overflow-hidden">
           {selectedCategory ? (
             <>
-              <div className="flex-1 overflow-y-auto animate-fadeIn">
+              <div className="flex-1 overflow-y-auto animate-fadeIn pb-20 md:pb-0">
                 <DishList dishes={filteredDishes} onViewDish={handleViewDish} />
               </div>
-              <Sidebar 
-                categories={categories}
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-              />
+              {/* Desktop Sidebar - hidden on mobile */}
+              <div className="hidden md:block">
+                <Sidebar 
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={setSelectedCategory}
+                />
+              </div>
+              
+              {/* Mobile Bottom Navigation */}
+              <div className="md:hidden fixed bottom-0 left-0 right-0 z-40">
+                {/* Category toggle button */}
+                <button
+                  onClick={() => setIsMobileCategoriesOpen(!isMobileCategoriesOpen)}
+                  className="w-full bg-menu-blue backdrop-blur-md border-t-2 border-menu-blue/50 px-4 py-3 flex items-center justify-between text-white font-semibold active:scale-95 transition-transform duration-200"
+                >
+                  <span className="flex items-center gap-2">
+                    <span className="text-lg">📋</span>
+                    {getCategoryName(categories.find(cat => cat.id === selectedCategory))}
+                  </span>
+                  <svg 
+                    className={`w-5 h-5 transition-transform ${isMobileCategoriesOpen ? 'rotate-180' : ''}`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {/* Categories drawer */}
+                {isMobileCategoriesOpen && (
+                  <div className="bg-menu-blue/95 backdrop-blur-md border-t border-white/20 max-h-64 overflow-y-auto">
+                    <div className="p-3 space-y-2">
+                      {categories.map((category) => (
+                        <button
+                          key={category.id}
+                          onClick={() => {
+                            setSelectedCategory(category.id);
+                            setIsMobileCategoriesOpen(false);
+                          }}
+                          className={`w-full text-left py-2.5 px-3 rounded-lg flex items-center gap-2 active:scale-95 transition-transform duration-200 ${
+                            selectedCategory === category.id
+                              ? 'bg-blue-700 text-white font-semibold shadow-lg'
+                              : 'bg-menu-blue/70 text-white/80'
+                          }`}
+                        >
+                          <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                            selectedCategory === category.id ? 'bg-white' : 'bg-white/60'
+                          }`} />
+                          <span className="text-sm">{getCategoryName(category)}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             </>
           ) : (
-            <div className="flex-1 flex">
-              {/* Left side content - positioned left but not at edge */}
-              <div className="flex-1 flex items-center justify-center">
-                <div className="relative">
+            <div className="flex-1 flex flex-col md:flex-row">
+              {/* Left side content - carousel */}
+              <div className="flex-1 flex items-center justify-center px-4 md:px-0">
+                <div className="relative w-full max-w-md">
                   <div className="relative z-10 text-center">
                     {/* Animated Dish image and category */}
                     <div className="mb-4">
                       <div 
-                        className={`transition-all duration-1000 overflow-hidden p-8 ${
+                        className={`transition-all duration-1000 overflow-hidden p-4 md:p-8 ${
                           isAnimating ? '-translate-x-full opacity-0' : 'translate-x-0 opacity-100'
                         }`}
                       >
@@ -236,10 +292,10 @@ function App() {
                           key={currentCarouselIndex}
                           src={currentImage}
                           alt={currentCarouselCategory?.name || 'Featured dish'}
-                          className="w-64 h-64 rounded-full object-cover mx-auto mb-6 ring-4 ring-menu-gold/60"
+                          className="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover mx-auto mb-4 md:mb-6 ring-4 ring-menu-gold/60"
                         />
                         
-                        <h2 className="text-3xl font-light text-menu-cream drop-shadow-lg">
+                        <h2 className="text-2xl md:text-3xl font-light text-white drop-shadow-lg">
                           {getCategoryName(currentCarouselCategory)}
                         </h2>
                       </div>
@@ -248,21 +304,23 @@ function App() {
                     {/* Fixed button - stays in place */}
                     <button 
                       onClick={() => currentCarouselCategory && setSelectedCategory(currentCarouselCategory.id)}
-                      className="px-10 py-4 bg-transparent border-3 border-menu-gold text-menu-gold text-base font-semibold rounded-full flex items-center gap-2 mx-auto hover:bg-menu-gold/20 transition-all duration-300"
+                      className="px-6 py-3 md:px-10 md:py-4 bg-menu-blue text-white text-sm md:text-base font-semibold rounded-full flex items-center gap-2 mx-auto active:scale-95 transition-transform duration-200"
                     >
-                      <span className="text-menu-gold">📋</span>
+                      <span className="text-white">📋</span>
                       {t('menu.goToMenu')}
                     </button>
                   </div>
                 </div>
               </div>
 
-              {/* Right sidebar - fixed */}
-              <Sidebar 
-                categories={categories}
-                selectedCategory={selectedCategory}
-                onSelectCategory={setSelectedCategory}
-              />
+              {/* Desktop sidebar - hidden on mobile */}
+              <div className="hidden md:block">
+                <Sidebar 
+                  categories={categories}
+                  selectedCategory={selectedCategory}
+                  onSelectCategory={setSelectedCategory}
+                />
+              </div>
             </div>
           )}
         </div>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Halal Hall Menu</string>
+    <string name="title_activity_main">Halal Hall Menu</string>
+    <string name="package_name">com.halalhall.menu</string>
+    <string name="custom_url_scheme">com.halalhall.menu</string>
+</resources>

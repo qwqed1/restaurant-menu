@@ -1,0 +1,38 @@
+{
+  "appId": "com.halalhall.menu",
+  "appName": "Halal Hall Menu",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true,
+    "allowNavigation": ["*"]
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 2000,
+      "backgroundColor": "#2a5f3f",
+      "androidScaleType": "CENTER_CROP",
+      "showSpinner": false,
+      "androidSpinnerStyle": "large",
+      "iosSpinnerStyle": "small",
+      "spinnerColor": "#ffffff"
+    },
+    "Keyboard": {
+      "resize": "none",
+      "style": "dark"
+    }
+  },
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": true,
+    "minWebViewVersion": 60,
+    "buildOptions": {
+      "minSdkVersion": 21,
+      "targetSdkVersion": 34
+    }
+  },
+  "ios": {
+    "contentInset": "always"
+  }
+}

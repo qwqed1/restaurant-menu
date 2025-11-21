@@ -16,22 +16,22 @@ body {
 }
 
 .glass-effect {
-  background: rgba(13, 59, 47, 0.5);
+  background: rgba(0, 38, 75, 0.5);
   backdrop-filter: blur(30px) saturate(180%);
   -webkit-backdrop-filter: blur(30px) saturate(180%);
-  border: 1px solid rgba(202, 181, 124, 0.2);
+  border: 1px solid rgba(242, 161, 31, 0.2);
   background-image: 
     repeating-linear-gradient(
       45deg,
       transparent,
       transparent 10px,
-      rgba(202, 181, 124, 0.03) 10px,
-      rgba(202, 181, 124, 0.03) 20px
+      rgba(242, 161, 31, 0.03) 10px,
+      rgba(242, 161, 31, 0.03) 20px
     );
 }
 
 .shadow-gold {
-  box-shadow: 0 4px 20px rgba(202, 181, 124, 0.4);
+  box-shadow: 0 4px 20px rgba(242, 161, 31, 0.3);
 }
 
 .hover\:scale-102:hover {

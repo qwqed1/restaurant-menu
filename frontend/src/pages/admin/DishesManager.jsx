@@ -29,6 +29,9 @@ function DishesManager({ onUpdate }) {
   const [editingDish, setEditingDish] = useState(null);
   const [formData, setFormData] = useState({
     name: '',
+    name_ru: '',
+    name_en: '',
+    name_kk: '',
     category_id: '',
     description_ru: '',
     description_en: '',
@@ -70,7 +73,7 @@ function DishesManager({ onUpdate }) {
 
     // Validation
     const errors = {};
-    if (!formData.name) errors.name = 'Название обязательно';
+    if (!formData.name_ru) errors.name_ru = 'Название на русском обязательно';
     if (!formData.category_id) errors.category_id = 'Выберите категорию';
     if (!formData.price || formData.price <= 0) errors.price = 'Укажите корректную цену';
 
@@ -109,10 +112,21 @@ function DishesManager({ onUpdate }) {
         image_url: imageUrl
       };
 
+      console.log('Sending dish data:', dishData);
+
+      const token = localStorage.getItem('adminToken');
+      const config = {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      };
+
       if (editingDish) {
-        await axios.put(`${API_URL}/api/admin/dishes/${editingDish.id}`, dishData);
+        const response = await axios.put(`${API_URL}/api/admin/dishes/${editingDish.id}`, dishData, config);
+        console.log('Update response:', response.data);
       } else {
-        await axios.post(`${API_URL}/api/admin/dishes`, dishData);
+        const response = await axios.post(`${API_URL}/api/admin/dishes`, dishData, config);
+        console.log('Create response:', response.data);
       }
       
       loadData();
@@ -152,6 +166,9 @@ function DishesManager({ onUpdate }) {
       setEditingDish(dish);
       setFormData({
         name: dish.name,
+        name_ru: dish.name_ru || dish.name || '',
+        name_en: dish.name_en || '',
+        name_kk: dish.name_kk || '',
         category_id: dish.category_id,
         description_ru: dish.description_ru || dish.description || '',
         description_en: dish.description_en || '',
@@ -167,6 +184,9 @@ function DishesManager({ onUpdate }) {
       setEditingDish(null);
       setFormData({
         name: '',
+        name_ru: '',
+        name_en: '',
+        name_kk: '',
         category_id: '',
         description_ru: '',
         description_en: '',
@@ -190,6 +210,9 @@ function DishesManager({ onUpdate }) {
     setEditingDish(null);
     setFormData({
       name: '',
+      name_ru: '',
+      name_en: '',
+      name_kk: '',
       category_id: '',
       description_ru: '',
       description_en: '',
@@ -420,21 +443,55 @@ function DishesManager({ onUpdate }) {
             </div>
 
             <form onSubmit={handleSubmit} className="p-6 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Название *
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.name}
-                    onChange={(e) => setFormData({...formData, name: e.target.value})}
-                    className={`w-full px-4 py-2 border ${formErrors.name ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green`}
-                  />
-                  {formErrors.name && (
-                    <p className="mt-1 text-sm text-red-500">{formErrors.name}</p>
-                  )}
+              {/* Dish Names in 3 languages */}
+              <div className="space-y-4 border-b pb-4">
+                <h3 className="text-lg font-semibold text-gray-800">Название блюда</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Название на русском *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name_ru}
+                      onChange={(e) => setFormData({...formData, name_ru: e.target.value, name: e.target.value})}
+                      className={`w-full px-4 py-2 border ${formErrors.name_ru ? 'border-red-500' : 'border-gray-300'} rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green`}
+                      placeholder="Введите название на русском"
+                    />
+                    {formErrors.name_ru && (
+                      <p className="mt-1 text-sm text-red-500">{formErrors.name_ru}</p>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Название на английском
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name_en}
+                      onChange={(e) => setFormData({...formData, name_en: e.target.value})}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green"
+                      placeholder="Enter name in English"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Название на казахском
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.name_kk}
+                      onChange={(e) => setFormData({...formData, name_kk: e.target.value})}
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-menu-green focus:border-menu-green"
+                      placeholder="Қазақ тілінде атауын енгізіңіз"
+                    />
+                  </div>
                 </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">

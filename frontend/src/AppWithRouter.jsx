@@ -1,5 +1,6 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import RoleSelection from './pages/RoleSelection';
 import HomePage from './pages/HomePage';
 import App from './App';
 import BarPage from './pages/BarPage';
@@ -11,8 +12,11 @@ function AppWithRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Main pages */}
-        <Route path="/" element={<HomePage />} />
+        {/* Role selection - initial screen */}
+        <Route path="/" element={<RoleSelection />} />
+        
+        {/* Client pages */}
+        <Route path="/home" element={<HomePage />} />
         <Route path="/menu" element={<App />} />
         <Route path="/bar" element={<BarPage />} />
         <Route path="/pizza" element={<PizzaPage />} />
