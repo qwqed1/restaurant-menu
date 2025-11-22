@@ -56,7 +56,6 @@ const HomePage = () => {
             <img 
               src="/img/Logo.png" 
               alt="Halal Hall Logo" 
-<<<<<<< HEAD
               className="w-48 h-48 md:w-64 md:h-64 lg:w-96 lg:h-96 mx-auto object-contain"
             />
           </div>
@@ -64,20 +63,10 @@ const HomePage = () => {
           {/* Company name - Vostochnyj Dvor */}
           <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6 md:mb-8 drop-shadow-2xl tracking-wider" style={{fontFamily: 'serif'}}>
             Vostochnyj Dvor
-=======
-              className="w-48 h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 mx-auto object-contain"
-            />
-          </div>
-          
-          {/* Company name - Halal Hall */}
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-menu-gold mb-6 md:mb-8 drop-shadow-2xl tracking-wider" style={{fontFamily: 'serif'}}>
-            Halal Hall
->>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
           </h1>
         </div>
 
         {/* Navigation buttons */}
-<<<<<<< HEAD
         <div className="relative z-20 flex flex-col w-full max-w-md md:max-w-none md:flex-row md:justify-center md:items-center gap-3 md:gap-4 animate-fadeInUp" style={{animationDelay: '0.3s'}}>
           <button
             onClick={() => navigate('/menu')}
@@ -86,50 +75,24 @@ const HomePage = () => {
             <Utensils className="w-5 h-5 md:w-6 md:h-6" />
             {t('menu.title')?.toUpperCase() || 'КУХНЯ'}
             <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-=======
-        <div className="flex flex-col w-full max-w-md md:max-w-none md:flex-row md:justify-center md:items-center gap-3 md:gap-4 animate-fadeInUp" style={{animationDelay: '0.3s'}}>
-          <button
-            onClick={() => navigate('/menu')}
-            className="group px-6 py-3 md:px-10 md:py-4 bg-transparent border-3 md:border-4 border-menu-gold text-menu-gold text-base md:text-xl font-bold rounded-full hover:bg-menu-gold hover:text-menu-green transform hover:scale-105 transition-all duration-300 shadow-xl shadow-menu-gold/20 flex items-center justify-center gap-2 md:gap-3"
-          >
-            <Utensils className="w-5 h-5 md:w-6 md:h-6" />
-            {t('menu.title')?.toUpperCase() || 'КУХНЯ'}
-            <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
->>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
           </button>
 
           <button
             onClick={() => navigate('/bar')}
-<<<<<<< HEAD
             className="px-6 py-3 md:px-10 md:py-4 bg-menu-blue text-white text-base md:text-xl font-bold rounded-full active:scale-95 transition-transform duration-200 shadow-xl flex items-center justify-center gap-2 md:gap-3"
           >
             <Wine className="w-5 h-5 md:w-6 md:h-6" />
             {t('menu.bar')?.toUpperCase() || 'БАР'}
             <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-=======
-            className="group px-6 py-3 md:px-10 md:py-4 bg-transparent border-3 md:border-4 border-menu-gold text-menu-gold text-base md:text-xl font-bold rounded-full hover:bg-menu-gold hover:text-menu-green transform hover:scale-105 transition-all duration-300 shadow-xl shadow-menu-gold/20 flex items-center justify-center gap-2 md:gap-3"
-          >
-            <Wine className="w-5 h-5 md:w-6 md:h-6" />
-            {t('menu.bar')?.toUpperCase() || 'БАР'}
-            <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
->>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
           </button>
 
           <button
             onClick={() => navigate('/pizza')}
-<<<<<<< HEAD
             className="px-6 py-3 md:px-10 md:py-4 bg-menu-blue text-white text-base md:text-xl font-bold rounded-full active:scale-95 transition-transform duration-200 shadow-xl flex items-center justify-center gap-2 md:gap-3"
           >
             <Pizza className="w-5 h-5 md:w-6 md:h-6" />
             {t('menu.pizza')?.toUpperCase() || 'ПИЦЦА'}
             <ChevronRight className="w-5 h-5 md:w-6 md:h-6" />
-=======
-            className="group px-6 py-3 md:px-10 md:py-4 bg-transparent border-3 md:border-4 border-menu-gold text-menu-gold text-base md:text-xl font-bold rounded-full hover:bg-menu-gold hover:text-menu-green transform hover:scale-105 transition-all duration-300 shadow-xl shadow-menu-gold/20 flex items-center justify-center gap-2 md:gap-3"
-          >
-            <Pizza className="w-5 h-5 md:w-6 md:h-6" />
-            {t('menu.pizza')?.toUpperCase() || 'ПИЦЦА'}
-            <ChevronRight className="w-5 h-5 md:w-6 md:h-6 group-hover:translate-x-1 transition-transform" />
->>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
           </button>
         </div>
       </div>
