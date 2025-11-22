@@ -231,7 +231,11 @@ function App() {
                 {/* Category toggle button */}
                 <button
                   onClick={() => setIsMobileCategoriesOpen(!isMobileCategoriesOpen)}
+<<<<<<< HEAD
                   className="w-full bg-menu-blue backdrop-blur-md border-t-2 border-menu-blue/50 px-4 py-3 flex items-center justify-between text-white font-semibold active:scale-95 transition-transform duration-200"
+=======
+                  className="w-full bg-menu-green/95 backdrop-blur-md border-t-2 border-menu-gold/30 px-4 py-3 flex items-center justify-between text-menu-gold font-semibold"
+>>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
                 >
                   <span className="flex items-center gap-2">
                     <span className="text-lg">📋</span>
@@ -249,7 +253,11 @@ function App() {
                 
                 {/* Categories drawer */}
                 {isMobileCategoriesOpen && (
+<<<<<<< HEAD
                   <div className="bg-menu-blue/95 backdrop-blur-md border-t border-white/20 max-h-64 overflow-y-auto">
+=======
+                  <div className="bg-menu-green/98 backdrop-blur-md border-t border-menu-gold/30 max-h-64 overflow-y-auto">
+>>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
                     <div className="p-3 space-y-2">
                       {categories.map((category) => (
                         <button
@@ -258,6 +266,7 @@ function App() {
                             setSelectedCategory(category.id);
                             setIsMobileCategoriesOpen(false);
                           }}
+<<<<<<< HEAD
                           className={`w-full text-left py-2.5 px-3 rounded-lg flex items-center gap-2 active:scale-95 transition-transform duration-200 ${
                             selectedCategory === category.id
                               ? 'bg-blue-700 text-white font-semibold shadow-lg'
@@ -266,6 +275,16 @@ function App() {
                         >
                           <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
                             selectedCategory === category.id ? 'bg-white' : 'bg-white/60'
+=======
+                          className={`w-full text-left py-2.5 px-3 rounded-lg flex items-center gap-2 border ${
+                            selectedCategory === category.id
+                              ? 'bg-menu-green border-menu-gold text-menu-gold font-semibold shadow-lg shadow-menu-gold/30'
+                              : 'border-transparent text-menu-cream/80'
+                          }`}
+                        >
+                          <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
+                            selectedCategory === category.id ? 'bg-menu-gold' : 'bg-menu-cream/40'
+>>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
                           }`} />
                           <span className="text-sm">{getCategoryName(category)}</span>
                         </button>
@@ -295,7 +314,11 @@ function App() {
                           className="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover mx-auto mb-4 md:mb-6 ring-4 ring-menu-gold/60"
                         />
                         
+<<<<<<< HEAD
                         <h2 className="text-2xl md:text-3xl font-light text-white drop-shadow-lg">
+=======
+                        <h2 className="text-2xl md:text-3xl font-light text-menu-cream drop-shadow-lg">
+>>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
                           {getCategoryName(currentCarouselCategory)}
                         </h2>
                       </div>
@@ -304,7 +327,11 @@ function App() {
                     {/* Fixed button - stays in place */}
                     <button 
                       onClick={() => currentCarouselCategory && setSelectedCategory(currentCarouselCategory.id)}
+<<<<<<< HEAD
                       className="px-6 py-3 md:px-10 md:py-4 bg-menu-blue text-white text-sm md:text-base font-semibold rounded-full flex items-center gap-2 mx-auto active:scale-95 transition-transform duration-200"
+=======
+                      className="px-6 py-3 md:px-10 md:py-4 bg-transparent border-2 md:border-3 border-menu-gold text-menu-gold text-sm md:text-base font-semibold rounded-full flex items-center gap-2 mx-auto hover:bg-menu-gold/20 transition-all duration-300"
+>>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
                     >
                       <span className="text-white">📋</span>
                       {t('menu.goToMenu')}

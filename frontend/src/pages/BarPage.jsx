@@ -200,16 +200,27 @@ function BarPage() {
 
         {/* Mobile category selector - only visible on mobile when category is selected */}
         {selectedCategory && (
+<<<<<<< HEAD
           <div className="md:hidden bg-menu-green/80 backdrop-blur-sm border-b border-white/20 px-4 py-3 overflow-x-auto">
+=======
+          <div className="md:hidden bg-menu-green/80 backdrop-blur-sm border-b border-menu-gold/20 px-4 py-3 overflow-x-auto">
+>>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
             <div className="flex gap-2 min-w-max">
               {categories.map((category) => (
                 <button
                   key={category.id}
                   onClick={() => setSelectedCategory(category.id)}
+<<<<<<< HEAD
                   className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium active:scale-95 transition-transform duration-200 ${
                     selectedCategory === category.id
                       ? 'bg-menu-blue text-white shadow-lg'
                       : 'bg-menu-blue/70 text-white'
+=======
+                  className={`px-4 py-2 rounded-full whitespace-nowrap text-sm font-medium transition-all duration-300 ${
+                    selectedCategory === category.id
+                      ? 'bg-menu-gold text-menu-green shadow-lg'
+                      : 'bg-menu-green/50 text-menu-cream border border-menu-gold/30'
+>>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
                   }`}
                 >
                   {getCategoryName(category)}
@@ -254,7 +265,11 @@ function BarPage() {
                           className="w-48 h-48 md:w-64 md:h-64 rounded-full object-cover mx-auto mb-4 md:mb-6 ring-4 ring-menu-gold/60"
                         />
                         
+<<<<<<< HEAD
                         <h2 className="text-2xl md:text-3xl font-light text-white drop-shadow-lg">
+=======
+                        <h2 className="text-2xl md:text-3xl font-light text-menu-cream drop-shadow-lg">
+>>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
                           {getCategoryName(currentCarouselCategory)}
                         </h2>
                       </div>
@@ -263,7 +278,11 @@ function BarPage() {
                     {/* Fixed button */}
                     <button 
                       onClick={() => currentCarouselCategory && setSelectedCategory(currentCarouselCategory.id)}
+<<<<<<< HEAD
                       className="px-6 md:px-10 py-3 md:py-4 bg-menu-blue text-white text-sm md:text-base font-semibold rounded-full flex items-center gap-2 mx-auto active:scale-95 transition-transform duration-200"
+=======
+                      className="px-6 md:px-10 py-3 md:py-4 bg-transparent border-3 border-menu-gold text-menu-gold text-sm md:text-base font-semibold rounded-full flex items-center gap-2 mx-auto hover:bg-menu-gold/20 transition-all duration-300"
+>>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
                     >
                       <span className="text-white">🍹</span>
                       {t('menu.goToMenu')}
