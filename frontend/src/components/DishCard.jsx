@@ -41,10 +41,8 @@ const DishCard = ({ dish, onViewDetails, index = 0 }) => {
 <<<<<<< HEAD
             <h3 className="text-base md:text-lg font-semibold text-white mb-1 md:mb-2 drop-shadow-sm truncate">{getDishName(dish)}</h3>
             <p className="text-white/70 text-xs md:text-sm leading-relaxed line-clamp-2">
-=======
             <h3 className="text-base md:text-lg font-semibold text-menu-cream mb-1 md:mb-2 drop-shadow-sm truncate">{getDishName(dish)}</h3>
             <p className="text-menu-cream/70 text-xs md:text-sm leading-relaxed line-clamp-2">
->>>>>>> ec5e51dd96d97dca8cf41b3c9967a3b477e07139
               {getDescription(dish)}
             </p>
             
